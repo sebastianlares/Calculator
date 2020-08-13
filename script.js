@@ -60,7 +60,6 @@ dotButton.addEventListener('click', pushDotToNumber);
 
 function addNumberToArray (event) {
     let button = event.target;
-    checkLength();
     if (check == false) {
         firstNumberArray.push(button.value);
         firstNumber = firstNumberArray.join('');
@@ -71,6 +70,7 @@ function addNumberToArray (event) {
         secondNumber = secondNumberArray.join('');
         showLowerDisplay.textContent = secondNumber;
     }
+    checkLength();
 }
 
 function addOperatorToArray (event) {
@@ -162,7 +162,7 @@ function resetCalculatorTwo () {
 }
 
 function pushDotToNumber () {
-    checkLength();
+  
     if (dotOnNumber == false) {
         if (check == false) {
             dotOnNumber = true;
@@ -178,6 +178,7 @@ function pushDotToNumber () {
     
         }
     }
+    checkLength();
 }
 
 function checkLength () {
