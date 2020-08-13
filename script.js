@@ -182,10 +182,9 @@ function pushDotToNumber () {
 }
 
 function checkLength () {
-    if (clickedArray.length > 13 || clickedArrayTwo.length > 13 || operatorArray.length > 13) {
-        clickedArray.length = 13;
-        clickedArrayTwo.length = 13;
-        operatorArray.length = 13;
+    if (firstNumberArray.length > 13 || secondNumberArray.length > 13) {
+        firstNumberArray.length = 13;
+        secondNumberArray.length = 13;
     }
 }
 
