@@ -5,277 +5,253 @@ const outcome = document.querySelector('.equal');
 const reset = document.querySelector('.reset');
 const deleteButton = document.querySelector('.delete');
 const dotButton = document.querySelector('.dot');
-const changeValue = document.querySelector('.changeValue');
-const buttons = document.querySelectorAll('button.number, button.operator');
 
-let clickedArray = [];
-let clickedArrayTwo = [];
+showLowerDisplay.textContent = 0;
+
+let firstNumberArray = [];
+let secondNumberArray = [];
 let check = false;
-let checkTwo = false;
-let operatorArray = [];
-
+let checkOperator;
 let firstNumber;
 let secondNumber;
 let operator;
-let newNumber;
-let resultArray = [];
+let h;
+let outcomeChecker = false;
+let dotOnNumber = false;
+let valueChecker = false;
+let testChecker = false;
 let result;
-let counter;
-let checkThree = false;
-let checkFour = false;
+let dotOnNumberTwo = false;
+let checkDelete = false;
 
-changeValue.addEventListener('click', () => {
-    if (checkFour == false) {
-        if (checkTwo == true) {
-            checkFour = true;
-            resultArray.unshift('-');
-            newNumber = resultArray.join('');
-            showLowerDisplay.textContent = newNumber;
-        }
-        else if (check == true) {
-            checkFour = true;
-            clickedArrayTwo.unshift('-');
-            secondNumber = clickedArrayTwo.join('');
-            showLowerDisplay.textContent = secondNumber;
-        }
-        else if (check == false) {
-            checkFour = true;
-            clickedArray.unshift('-');
-            firstNumber = clickedArray.join('');
-            showLowerDisplay.textContent = firstNumber;  
-        }
-    }
-    else if (checkFour == true) {
-        if (checkTwo == true) {
-            let i = resultArray.join('');
-            let o = i.split('');
-            resultArray = o;
-            resultArray.shift();
-            console.log(resultArray);
-            newNumber = resultArray.join('');
-            showLowerDisplay.textContent = newNumber;
-            checkFour = false;
-        }
-        else if (check == true) {
-            checkFour = false;
-            clickedArrayTwo.shift();
-            secondNumber = clickedArrayTwo.join('');
-            showLowerDisplay.textContent = secondNumber;
-            console.log(clickedArrayTwo);
-        }
-        else if (check == false) {
-            checkFour = false;
-            clickedArray.shift();
-            firstNumber = clickedArray.join('');
-            showLowerDisplay.textContent = firstNumber;  
-            console.log(clickedArray);
-        }
-    }
+numberButtons.forEach(el => {
+    el.addEventListener('click', addNumberToArray)
 });
-
-dotButton.addEventListener('click', () => {
-    if (checkThree == false) {
-        if (check == true) {
-            checkThree = true;
-            clickedArrayTwo.push('.');
-            secondNumber = clickedArrayTwo.join('');
-            showLowerDisplay.textContent = secondNumber;
-        }
-        else if (check == false) {
-            checkThree = true;
-            clickedArray.push('.');
-            firstNumber = clickedArray.join('');
-            showLowerDisplay.textContent = firstNumber;  
-        }
-    }
-    checkLength();
-});
-
-reset.addEventListener('click', () => {
-    resetCalculator();
-    showLowerDisplay.textContent = firstNumber;
-});
-
-deleteButton.addEventListener('click', () => {
-    if (checkTwo == true) {
-        let k = newNumber.split('');
-        k.pop();
-        newNumber = k.join('');
-        showLowerDisplay.textContent = newNumber;
-    }
-    else if (check == true) {
-        clickedArrayTwo.pop();
-        secondNumber = clickedArrayTwo.join('');
-        showLowerDisplay.textContent = secondNumber;
-    }
-    else if (check == false) {
-        
-        clickedArray.pop();
-        firstNumber = clickedArray.join('');
-        showLowerDisplay.textContent = firstNumber;
-    }
-}); 
 
 operatorButtons.forEach(el => {
     el.addEventListener('click', () => {
-        counter = 0;
-        if (check) {
-            result = operateNumbers(operator, firstNumber, secondNumber);
-            showLowerDisplay.textContent = result;
-            clickedArray = [];
-            clickedArrayTwo = [];
-            operatorArray = [];
-            resultArray.push(result);
-            newNumber = resultArray.join('');
-            firstNumber = newNumber;
-            resultArray = [];
-            operatorArray.push(el.value);
-            operator = operatorArray.join('');
-            checkThree = false;
-        }
-        else {
-            check = true;
-            operatorArray.push(el.value);
-            operator = operatorArray.join('');
-            checkThree = false;
-        }
-        checkLength();
-    });
+        addOperatorToArray(event);
+        dotOnNumber = false;
+    })
 });
 
-numberButtons.forEach(el => {
-    el.addEventListener('click', () => {
-        counter = 0;
-        if (checkTwo == true) {
-            if (check == true) {
-                clickedArrayTwo.push(el.value);
-                secondNumber = clickedArrayTwo.join('');
-                showLowerDisplay.textContent = secondNumber;
-                firstNumber = newNumber;
-                resultArray = [];
-            }
-        }
-        else {
-            if (check == true) {
-            clickedArrayTwo.push(el.value);
-            secondNumber = clickedArrayTwo.join('');
-            showLowerDisplay.textContent = secondNumber;
-            }
-            else {
-                clickedArray.push(el.value);
-                firstNumber = clickedArray.join('');
-                showLowerDisplay.textContent = firstNumber;  
-            }
-        }
-    checkLength();
-    });
-});
+deleteButton.addEventListener('click', deleteCurrentTarget);
 
 outcome.addEventListener('click', () => {
-    if (counter >= 1) {
-        showLowerDisplay.textContent = 0;
+    if (outcomeChecker == false) {
+        makeCalculation(operator);
+        result = firstNumber;
         resetCalculator();
-    }
-    
-    if (firstNumber == undefined || secondNumber == undefined || operator == undefined)
-    {
-        showLowerDisplay.textContent = 0;
-        resetCalculator();
+        showLowerDisplay.textContent = result;
+        firstNumber = result;
+        outcomeChecker = true;
+        console.log(typeof(result));
+        checkDelete = true;
     }
     else {
-        result = operateNumbers(operator, firstNumber, secondNumber);
-        showLowerDisplay.textContent = result;
-        clickedArray = [];
-        clickedArrayTwo = [];
-        operatorArray = [];
-        checkTwo = true;
-        resultArray.push(result);
-        newNumber = resultArray.join('');
-        check = false;
-        counter = 1;   
-        checkThree = false;
+        resetCalculator();
+        outcomeChecker = false;
     }
 });
 
-function addNumbers (one, two) {
-    let h = one + two;
-    if (h % 1 != 0) {
-        let n = h.countDecimals();
-        return h.toFixed(parseInt(n));
-    } 
-    return h;
+reset.addEventListener('click', resetCalculatorTwo);
+
+dotButton.addEventListener('click', pushDotToNumber);
+
+function addNumberToArray (event) {
+    let button = event.target;
+    if (check == false) {
+        firstNumberArray.push(button.value);
+        firstNumber = firstNumberArray.join('');
+        showLowerDisplay.textContent = firstNumber;
+    }
+    else {
+        secondNumberArray.push(button.value);
+        secondNumber = secondNumberArray.join('');
+        showLowerDisplay.textContent = secondNumber;
+    }
 }
 
-function subtractNumbers (one, two) {
-    let h = one - two;
-    if ( h % 1 != 0) {
-        let n = h.countDecimals();
-        return h.toFixed(parseInt(n));
+function addOperatorToArray (event) {
+    if (check == false) {
+        operator = event.target.value;
+        check = true;
+        outcomeChecker = false;
+        
     }
-    return h;
+    else {
+        makeCalculation(operator);
+        operator = event.target.value; 
+        outcomeChecker = false;
+        testChecker = true;
+        
+    }
+}
+
+function deleteCurrentTarget () {
+    if (checkDelete == true) {
+        let k = firstNumber.toString().split('');
+        k.pop();
+        firstNumber = k.join('');
+        showLowerDisplay.textContent = firstNumber;
+    }
+    else if ( check == true) {
+        secondNumberArray.pop();
+        secondNumber = secondNumberArray.join('');
+        showLowerDisplay.textContent = secondNumber;
+    }
+    else {
+        firstNumberArray.pop();
+        firstNumber = firstNumberArray.join('');
+        showLowerDisplay.textContent = firstNumber;
+    }
+}
+
+function makeCalculation (operator) {
+    console.log(firstNumber, secondNumber);
+
+    if (firstNumber == undefined) {
+        check = false;
+        numberButtons.forEach(el => {
+            el.addEventListener('click', addNumberToArray)
+        });
+        return;
+    }
+    let one = parseFloat(firstNumber);
+    let two = parseFloat(secondNumber);
+        switch(operator) {
+            case '+':
+                addNumbers(one, two);
+            break;
+            case '-':
+                subtractNumbers(one, two);
+            break;
+            case '*':
+                multiplyNumbers(one, two);
+            break;
+            case '/':
+                divideNumbers(one, two);
+            break;
+            default: 'Error';
+        }
+}
     
+function resetCalculator () {              
+    firstNumberArray = [];
+    secondNumberArray = [];
+    check = false;
+    checkOperator = false;
+    showLowerDisplay.textContent = firstNumber;
+    firstNumber = 0;
+    secondNumber = 0.0796856734;
+    dotOnNumber = false;
+    outcomeChecker = false;
 }
 
-function multiplyNumbers (one, two) {
-    let h = one * two;
-    if ( h % 1!= 0) {
-        return h.toFixed(parseInt(h.countDecimals()));
-    }
-    return h;
+function resetCalculatorTwo () {              
+    firstNumberArray = [];
+    secondNumberArray = [];
+    check = false;
+    checkOperator = false;
+    showLowerDisplay.textContent = 0;
+    firstNumber = undefined;
+    secondNumber = undefined;
+    dotOnNumber = false;
+    outcomeChecker = false;
 }
 
-function divideNumbers ( one, two) {
-    let h = one / two;
-    if (h % 1 != 0) {
-        return h.toFixed(parseInt(size(one, two).countDecimals()));
-    }
-    return h;
-}
-
-function operateNumbers (operator, one, two) {
-    one = parseFloat(one);
-    two = parseFloat(two);
-    if (operator == undefined) {
-        return showLowerDisplay.textContent = 'Error';
-        ;
-    }
-    else if (operator === '+') {
-        return addNumbers(one, two);
-    } 
-    else if (operator == '-') {
-        return subtractNumbers(one, two);
-    }
-    else if (operator === '*' ) {
-        return multiplyNumbers(one, two);
-    }
-    else if (operator == '/') {
-        return divideNumbers(one, two);
+function pushDotToNumber () {
+    if (dotOnNumber == false) {
+        if (check == false) {
+            dotOnNumber = true;
+            firstNumberArray.push('.');
+            firstNumber = firstNumberArray.join('');
+            showLowerDisplay.textContent = firstNumber;
+        }
+        else if (check == true) {
+            dotOnNumber = true;
+            secondNumberArray.push('.');
+            secondNumber = secondNumberArray.join('');
+            showLowerDisplay.textContent = secondNumber; 
+    
+        }
     }
 }
 
 function checkLength () {
-    if (clickedArray.length > 14 || clickedArrayTwo.length > 14 || operatorArray.length > 14) {
-        clickedArray.length = 14;
-        clickedArrayTwo.length = 14;
-        operatorArray.length = 14;
+    if (clickedArray.length > 13 || clickedArrayTwo.length > 13 || operatorArray.length > 13) {
+        clickedArray.length = 13;
+        clickedArrayTwo.length = 13;
+        operatorArray.length = 13;
     }
 }
 
-function resetCalculator () {
-    clickedArray = [];
-    clickedArrayTwo = [];
-    check = false;
-    checkTwo = false;
-    operatorArray = [];
-    firstNumber = 0;
-    secondNumber = undefined;
-    operator = undefined;
-    newNumber = 0;
-    resultArray = [];
-    result = 0;
-    counter = 0;
-    checkThree = false;
-    checkFour = false;
+function addNumbers (one, two) {
+    if (two == 0.0796856734) {
+        two = 0;
+    }
+    h = one + two;
+    if (h % 1 != 0) {
+        h = h.toFixed(size(one, two));
+    }
+    secondNumberArray.length = 0; 
+    firstNumber = h;
+    secondNumber = 0;
+    return showLowerDisplay.textContent = firstNumber;
+}
+
+function subtractNumbers (one, two) {
+    if (two == 0.0796856734) {
+        two = 0;
+    }
+    let h = one - two;
+    if ( h % 1 != 0) {
+        h = h.toFixed(size(one, two));
+    }
+    secondNumberArray = []; 
+    firstNumber = h;
+    secondNumber = 0;
+    return showLowerDisplay.textContent = firstNumber;
+}
+
+function multiplyNumbers (one, two) {
+    if (two == 0.0796856734) {
+        two = 1;
+    }
+    let h = one * two;
+    if ( h % 1!= 0) {
+        h = h.toFixed(size(one, two));
+    }
+    secondNumberArray.length = []; 
+    firstNumber = h;
+    secondNumber = 1;
+    return showLowerDisplay.textContent = firstNumber;
+}
+
+function divideNumbers (one, two) {
+    if (two == 0.0796856734) {
+        two = 1;
+    }
+    else if (two == undefined) {
+        return;
+    }
+    else if (two == 0 && one == 0) {
+        showLowerDisplay.textContent = 'Infinity';
+        return resetCalculator();
+    }
+    else {
+        let h = one / two;
+        if ( h === 0) {
+            showLowerDisplay.textContent = 'Error';
+            return resetCalculator();
+        }
+        else if (h % 1 != 0) {
+            h = h.toFixed(size(one, two));
+        }
+        secondNumberArray.length = []; 
+        firstNumber = h;
+        return showLowerDisplay.textContent = firstNumber;
+    }
 }
 
 Number.prototype.countDecimals = function () {
@@ -284,12 +260,14 @@ Number.prototype.countDecimals = function () {
 }
 
 function size (one, two) {
-    if (one > two) {
-        return one;
+    if (one.countDecimals() > two.countDecimals()) {
+        return one.countDecimals();
     }
-    else return two;
+    else return two.countDecimals();
 }
 
-function findOperator () {
-    return '-';
+function checkNumber (one) {
+    if (one == undefined) {
+        resetCalculator();
+    }
 }
