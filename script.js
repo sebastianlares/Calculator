@@ -23,6 +23,9 @@ let testChecker = false;
 let result;
 let dotOnNumberTwo = false;
 let checkDelete = false;
+let fullArray = [];
+let full;
+let dontDelete = false;
 
 numberButtons.forEach(el => {
     el.addEventListener('click', addNumberToArray)
@@ -32,6 +35,7 @@ operatorButtons.forEach(el => {
     el.addEventListener('click', () => {
         addOperatorToArray(event);
         dotOnNumber = false;
+        console.log(check);
     })
 });
 
@@ -39,18 +43,21 @@ deleteButton.addEventListener('click', deleteCurrentTarget);
 
 outcome.addEventListener('click', () => {
     if (outcomeChecker == false) {
+        console.log(firstNumber, secondNumber);
         makeCalculation(operator);
         result = firstNumber;
         resetCalculator();
-        showLowerDisplay.textContent = result;
         firstNumber = result;
+        showLowerDisplay.textContent = firstNumber;
+        console.log(firstNumber, firstNumberArray);
         outcomeChecker = true;
-        console.log(typeof(result));
         checkDelete = true;
+        check = false;
+        console.log(secondNumberArray);
+        console.log(result);
     }
     else {
-        resetCalculator();
-        outcomeChecker = false;
+        return;
     }
 });
 
@@ -74,7 +81,18 @@ function addNumberToArray (event) {
 }
 
 function addOperatorToArray (event) {
-    if (check == false) {
+    dontDelete = true;
+    if (firstNumber == undefined) {
+        return;
+    }
+    else if (secondNumber == undefined) {
+        check = true;
+        operator = event.target.value;
+        numberButtons.forEach(el => {
+            el.addEventListener('click', addNumberToArray)
+        });
+    }
+    else if (check == false) {
         operator = event.target.value;
         check = true;
         outcomeChecker = false;
@@ -84,22 +102,59 @@ function addOperatorToArray (event) {
         makeCalculation(operator);
         operator = event.target.value; 
         outcomeChecker = false;
-        testChecker = true;
-        
     }
 }
 
 function deleteCurrentTarget () {
     if (checkDelete == true) {
-        let k = firstNumber.toString().split('');
-        k.pop();
-        firstNumber = k.join('');
-        showLowerDisplay.textContent = firstNumber;
+        if (check == true) {
+            if (dontDelete == false) {
+                secondNumberArray.pop();
+                secondNumber = secondNumberArray.join('');
+                showLowerDisplay.textContent = secondNumber;
+            }
+            else {
+                let k = firstNumber.toString().split('');
+                if (result != undefined) {
+                    let j = result.toString().split('');
+                    j.pop();
+                    result = j.join('');
+                }
+                k.pop();
+                firstNumber = k.join('');
+                showLowerDisplay.textContent = firstNumber;
+            }
+        }
+        else {
+            let k = firstNumber.toString().split('');
+            if (result != undefined) {
+                let j = result.toString().split('');
+                j.pop();
+                result = j.join('');
+            }
+            k.pop();
+            firstNumber = k.join('');
+            showLowerDisplay.textContent = firstNumber;
+        }
+
     }
     else if ( check == true) {
-        secondNumberArray.pop();
-        secondNumber = secondNumberArray.join('');
-        showLowerDisplay.textContent = secondNumber;
+        if (dontDelete == false) {
+            secondNumberArray.pop();
+            secondNumber = secondNumberArray.join('');
+            showLowerDisplay.textContent = secondNumber;
+        }
+        else {
+            let k = firstNumber.toString().split('');
+            if (result != undefined) {
+                let j = result.toString().split('');
+                j.pop();
+                result = j.join('');
+            }
+            k.pop();
+            firstNumber = k.join('');
+            showLowerDisplay.textContent = firstNumber;
+        }
     }
     else {
         firstNumberArray.pop();
@@ -109,13 +164,7 @@ function deleteCurrentTarget () {
 }
 
 function makeCalculation (operator) {
-    console.log(firstNumber, secondNumber);
-
     if (firstNumber == undefined) {
-        check = false;
-        numberButtons.forEach(el => {
-            el.addEventListener('click', addNumberToArray)
-        });
         return;
     }
     let one = parseFloat(firstNumber);
@@ -135,6 +184,7 @@ function makeCalculation (operator) {
             break;
             default: 'Error';
         }
+        dontDelete = false;
 }
     
 function resetCalculator () {              
@@ -144,7 +194,7 @@ function resetCalculator () {
     checkOperator = false;
     showLowerDisplay.textContent = firstNumber;
     firstNumber = 0;
-    secondNumber = 0.0796856734;
+    secondNumber = 0.0796856733;
     dotOnNumber = false;
     outcomeChecker = false;
 }
@@ -156,16 +206,23 @@ function resetCalculatorTwo () {
     checkOperator = false;
     showLowerDisplay.textContent = 0;
     firstNumber = undefined;
-    secondNumber = undefined;
+    secondNumber = 0.0796856733;
     dotOnNumber = false;
     outcomeChecker = false;
+    result = undefined;
 }
 
 function pushDotToNumber () {
-  
-    if (dotOnNumber == false) {
+    
+     if (dotOnNumber == false) {
         if (check == false) {
+            if (result != undefined && result.toString().includes('.')) {
+                return
+            }
             dotOnNumber = true;
+            if (result != undefined) {
+                firstNumberArray = result.toString().split('');
+            }
             firstNumberArray.push('.');
             firstNumber = firstNumberArray.join('');
             showLowerDisplay.textContent = firstNumber;
@@ -175,7 +232,6 @@ function pushDotToNumber () {
             secondNumberArray.push('.');
             secondNumber = secondNumberArray.join('');
             showLowerDisplay.textContent = secondNumber; 
-    
         }
     }
     checkLength();
@@ -189,36 +245,37 @@ function checkLength () {
 }
 
 function addNumbers (one, two) {
-    if (two == 0.0796856734) {
-        two = 0;
+    if (two == 0.0796856733) {
+        return;
     }
     h = one + two;
     if (h % 1 != 0) {
         h = h.toFixed(size(one, two));
     }
-    secondNumberArray.length = 0; 
+     
     firstNumber = h;
-    secondNumber = 0;
+    secondNumber = 0.0796856733;
+    secondNumberArray.length = [];
     return showLowerDisplay.textContent = firstNumber;
 }
 
 function subtractNumbers (one, two) {
-    if (two == 0.0796856734) {
-        two = 0;
+    if (two == 0.0796856733) {
+        return;
     }
     let h = one - two;
     if ( h % 1 != 0) {
         h = h.toFixed(size(one, two));
     }
-    secondNumberArray = []; 
     firstNumber = h;
-    secondNumber = 0;
+    secondNumber = 0.0796856733;
+    secondNumberArray = []; 
     return showLowerDisplay.textContent = firstNumber;
 }
 
 function multiplyNumbers (one, two) {
-    if (two == 0.0796856734) {
-        two = 1;
+    if (two == 0.0796856733) {
+        return;
     }
     let h = one * two;
     if ( h % 1!= 0) {
@@ -226,13 +283,13 @@ function multiplyNumbers (one, two) {
     }
     secondNumberArray.length = []; 
     firstNumber = h;
-    secondNumber = 1;
+    secondNumber = 0.0796856733;
     return showLowerDisplay.textContent = firstNumber;
 }
 
 function divideNumbers (one, two) {
-    if (two == 0.0796856734) {
-        two = 1;
+    if (two == 0.0796856733) {
+        return;
     }
     else if (two == undefined) {
         return;
@@ -251,6 +308,7 @@ function divideNumbers (one, two) {
             h = h.toFixed(size(one, two));
         }
         secondNumberArray.length = []; 
+        secondNumber = 0.0796856733;
         firstNumber = h;
         return showLowerDisplay.textContent = firstNumber;
     }
@@ -262,7 +320,10 @@ Number.prototype.countDecimals = function () {
 }
 
 function size (one, two) {
-    if (one.countDecimals() > two.countDecimals()) {
+    if (one.countDecimals() == 0 && two.countDecimals() == 0) {
+        return one.toFixed(3);
+    }
+    else if (one.countDecimals() > two.countDecimals()) {
         return one.countDecimals();
     }
     else return two.countDecimals();
