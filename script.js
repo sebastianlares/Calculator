@@ -88,9 +88,7 @@ function addOperatorToArray (event) {
     else if (secondNumber == undefined) {
         check = true;
         operator = event.target.value;
-        numberButtons.forEach(el => {
-            el.addEventListener('click', addNumberToArray)
-        });
+
     }
     else if (check == false) {
         operator = event.target.value;
@@ -320,8 +318,8 @@ Number.prototype.countDecimals = function () {
 }
 
 function size (one, two) {
-    if (one.countDecimals() == 0 && two.countDecimals() == 0) {
-        return one.toFixed(3);
+    if (one % 1 == 0 && two % 1 == 0) {
+        return 2;
     }
     else if (one.countDecimals() > two.countDecimals()) {
         return one.countDecimals();
