@@ -131,3 +131,7 @@ footer {
 .equal {
 	width: 144px;
 }
+
+.icon:hover {
+	opacity: 0.6;
+}
